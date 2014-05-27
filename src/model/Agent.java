@@ -30,7 +30,7 @@ public interface Agent {
 	 * Get the tolerance % of this agent.
 	 * @return Float representing tolerance. 
 	 */
-	float getTolerance();
+	float getComfort();
 	
 	/**
 	 * Given a list of neighbors, evaluates if happy or not.

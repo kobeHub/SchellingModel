@@ -4,7 +4,7 @@ public class Position {
 
 	int row, column;
 
-	Position(int r, int c) {
+	public Position(int r, int c) {
 		row = r;
 		column = c;
 	}
@@ -52,11 +52,16 @@ public class Position {
 	
 	
 	Position[] getNLocations(){
-		Position[] p = new Position[4];
+		Position[] p = new Position[8];
 		p[0] = new Position(this.row, this.column-1);
 		p[1] = new Position(this.row,this.column +1);
 		p[2] = new Position(this.row-1, this.column);
 		p[3] = new Position(this.row+1, this.column);
+		p[4] = new Position(this.row+1, this.column+1);
+		p[5] = new Position(this.row-1,this.column -1);
+		p[6] = new Position(this.row+1, this.column-1);
+		p[7] = new Position(this.row-1, this.column+1);
+			
 		return p;
 	}
 	

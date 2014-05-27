@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public interface Board {
 	
@@ -78,5 +79,11 @@ public interface Board {
 	 * @return int - number of unhappy agents.
 	 */
 	int timeStep();
+	
+	/**
+	 * Get an iterator of all agents.
+	 * @return iterator of all agents in the board.
+	 */
+	Iterator<Agent> getAgentList();
 	
 }

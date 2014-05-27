@@ -7,12 +7,18 @@ public class AgentA implements Agent {
 	
 	Position pos;
 	type group;
-	float tolerance;
+	float comfort; //Percentage of like neighbors preferred. 
 	
 	public AgentA(Position p, type g, float t){
 		pos = new Position(p);
 		group = g;
-		tolerance = t;
+		comfort = t;
+	}
+	
+	public AgentA(type g, float t){
+		pos = new Position(-1,-1);
+		group = g;
+		comfort = t;
 	}
 
 	@Override
@@ -32,13 +38,18 @@ public class AgentA implements Agent {
 	}
 
 	@Override
-	public float getTolerance() {
-		return tolerance;
+	public float getComfort() {
+		return comfort;
 	}
 
 	@Override
 	public boolean isHappy(ArrayList<Agent> neighbors) {
+		// Unhappy if percentage of like neighbors is less than comfort level.
 		int total = neighbors.size();
+		
+		if(total == 0)
+			return true;
+		
 		int num = 0;
 		Iterator<Agent> n = neighbors.iterator();
 		while(n.hasNext())
@@ -46,7 +57,7 @@ public class AgentA implements Agent {
 				num+=1;
 		
 		float perc = (float)num/total;
-		return perc <= tolerance;
+		return !(perc < comfort);
 	}
 	
 }

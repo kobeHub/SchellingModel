@@ -48,6 +48,7 @@ public class BoardA implements Board {
 
 	@Override
 	public ArrayList<Agent> getNeighbors(Position loc) {
+
 		Position[] pos = loc.getNLocations();
 		ArrayList<Agent> neighbors = new ArrayList<Agent>();
 		
@@ -55,7 +56,7 @@ public class BoardA implements Board {
 			if(isValidLoc(pos[i]))
 				if(getAgent(pos[i])!=null)
 					neighbors.add(getAgent(pos[i]));
-		
+				
 		return neighbors;
 	}
 
@@ -88,9 +89,9 @@ public class BoardA implements Board {
 		Position loc;
 		try {
 			loc = randomLoc();
+			a.setPos(loc);
 			return addAgent(a,loc);
 		} catch (Exception e) {
-			System.out.println("No empty space available.");
 			e.printStackTrace();
 			return false;
 			
@@ -146,6 +147,12 @@ public class BoardA implements Board {
 			return true;
 		else
 			return false;
+	}
+	
+	@Override
+	public Iterator<Agent> getAgentList(){
+		Iterator<Agent> it = agentlist.iterator();
+		return it;
 	}
 
 }
