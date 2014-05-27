@@ -14,8 +14,9 @@ public interface Board {
 	/**
 	 * Returns a random, unoccupied location on the board.
 	 * @return Position which is unoccupied.
+	 * @throws Exception when no empty location exists.
 	 */
-	Position randomLoc();
+	Position randomLoc() throws Exception;
 
 	/**
 	 *  Returns the list of neighbors for the given location.
@@ -74,7 +75,8 @@ public interface Board {
 	
 	/**
 	 * Take a timestep, evaluate state of all agents and relocate if required. 
+	 * @return int - number of unhappy agents.
 	 */
-	void timeStep();
+	int timeStep();
 	
 }

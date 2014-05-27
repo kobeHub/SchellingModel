@@ -2,6 +2,8 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Random;
 
 public class BoardA implements Board {
 
@@ -10,7 +12,7 @@ public class BoardA implements Board {
 	int ROWS;
 	int COLUMNS;
 
-	BoardA(int r, int c) {
+	public BoardA(int r, int c) {
 		ROWS = r;
 		COLUMNS = c;
 		agents = new Hashtable<String, Agent>();
@@ -18,16 +20,43 @@ public class BoardA implements Board {
 	}
 
 	@Override
-	public Position randomLoc() {
-		// TODO Auto-generated method stub
-		return null;
+	public Position randomLoc() throws Exception {
+		if (agents.size() == ROWS * COLUMNS)
+			throw new Exception("World Full");
+		else {
+
+			Random r = new Random();
+
+			ArrayList<Position> allValidLocations = new ArrayList<Position>();
+			
+			for (int i = 0; i < COLUMNS; i++) {
+				for (int j = 0; j < ROWS; j++) {
+					Position l = new Position(j, i);
+					if (isValidLoc(l) && isEmpty(l))
+						allValidLocations.add(l);
+				}
+			}
+
+			if (allValidLocations.size() == 0)
+				throw new Exception("No more space in the world");
+
+			int rand = r.nextInt(allValidLocations.size());
+			Position random = allValidLocations.get(rand);
+			return random;
+		}
 	}
 
 	@Override
 	public ArrayList<Agent> getNeighbors(Position loc) {
+		Position[] pos = loc.getNLocations();
+		ArrayList<Agent> neighbors = new ArrayList<Agent>();
 		
+		for(int i=0; i<pos.length; i++)
+			if(isValidLoc(pos[i]))
+				if(getAgent(pos[i])!=null)
+					neighbors.add(getAgent(pos[i]));
 		
-		return null;
+		return neighbors;
 	}
 
 	@Override
@@ -56,15 +85,27 @@ public class BoardA implements Board {
 
 	@Override
 	public boolean addAgent(Agent a) {
-		Position loc = randomLoc();
-		return addAgent(a,loc);
+		Position loc;
+		try {
+			loc = randomLoc();
+			return addAgent(a,loc);
+		} catch (Exception e) {
+			System.out.println("No empty space available.");
+			e.printStackTrace();
+			return false;
+			
+		}
+		
 	}
 
 	@Override
 	public Agent removeAgent(Position loc) {
-		return agents.remove(loc.toString());
+		Agent a = agents.remove(loc.toString());
+		if(a!=null)
+			agentlist.remove(a);
+		return a;
 	}
-
+	
 	@Override
 	public int size() {
 		return ROWS * COLUMNS;
@@ -76,8 +117,27 @@ public class BoardA implements Board {
 	}
 
 	@Override
-	public void timeStep() {
-		// TODO Auto-generated method stub
+	public int timeStep() {
+		Iterator<Agent> a = agentlist.iterator();
+		int count =0;
+		while(a.hasNext()){
+			Agent cur = a.next();
+			if(!cur.isHappy(getNeighbors(cur.getPos()))){
+				count++;
+				try {
+					//Moving an agent who is not happy.
+					Position loc = randomLoc();
+					agents.remove(cur.getPos().toString());
+					cur.setPos(loc);
+					agents.put(loc.toString(),cur);
+				} catch (Exception e) {
+					System.out.println("No other position available");
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return count;
 	}
 
 	@Override
